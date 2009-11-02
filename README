@@ -1,0 +1,11 @@
+======================
+Django user reputation
+======================
+
+This is a simple user-reputation and reputation access control application
+for Django.  It requires Django 1.0 or newer, and has no other required 
+dependencies.
+
+For installation instructions, see the file "INSTALL" in this directory.
+For instructions on how to use this application, check out the docs/
+directory.

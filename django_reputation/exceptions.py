@@ -1,0 +1,2 @@
+class ReputationException(Exception):
+    pass
