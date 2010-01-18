@@ -1,5 +1,6 @@
 from django.conf import settings
 
+REPUTATION_ENABLED = getattr(settings, 'REPUTATION_ENABLED', True)
 MAX_REPUTATION_GAIN_PER_DAY = getattr(settings, 'MAX_REPUTATION_GAIN_PER_DAY', 250)
 MAX_REPUTATION_LOSS_PER_DAY = getattr(settings, 'MAX_REPUATATION_LOSS_PER_DAY', -250)
 BASE_REPUTATION = getattr(settings, 'BASE_REPUTATION', 5)

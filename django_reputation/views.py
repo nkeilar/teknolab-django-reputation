@@ -15,4 +15,6 @@ def reputation_required(request,  permission_name):
     except ObjectDoesNotExist:
         permission = None
     
-    return shortcuts.render_to_response(REPUTATION_REQUIRED_TEMPLATE,  {'permission':permission},  context_instance = RequestContext(request))
+    return shortcuts.render_to_response(REPUTATION_REQUIRED_TEMPLATE,  
+                                        {'permission':permission},  
+                                        context_instance = RequestContext(request))
