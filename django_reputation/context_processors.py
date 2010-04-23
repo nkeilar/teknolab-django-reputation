@@ -16,7 +16,6 @@ def reputation(request):
     permissions = Permission.objects.all()
     permissions_dict = {}
     
-    print request.user.reputation.reputation
     for permission in permissions:
         if getattr(request.user, 'reputation', None):
             permissions_dict[permission.name] = request.user.reputation.reputation >= permission.required_reputation

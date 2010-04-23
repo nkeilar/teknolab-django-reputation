@@ -66,15 +66,4 @@ class DenyMessage(template.Node):
     def render(self,  context):
         unique_id = resolve_variable(self.unique_id,  context, self.unique_id)
         
-        try:
-            permission = Permission.objects.get(name = self.permission_name)
-        except ObjectDoesNotExist:
-            permission = None
-        
-        if permission:
-            inner_function =  '$("#%s").html("%s");' % (self.overlay_id, permission.description) 
-            ajax_script = """<script type='text/javascript'>$("#%s").bind("click", function() {%s});</script>""" % (str(unique_id), inner_function)
-            return_value = "\n" + ajax_script + "\n"
-        else:
-            return_value = ''
-        return return_value
+        return ''
