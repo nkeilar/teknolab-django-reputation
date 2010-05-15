@@ -3,7 +3,6 @@ import datetime
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_extensions.db.fields import CreationDateTimeField, ModificationDateTimeField
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
@@ -161,7 +160,7 @@ class UserReputationAction(models.Model):
     content_object = generic.GenericForeignKey()
     
     value = models.IntegerField(default = 0)
-    date_created = CreationDateTimeField()
+    date_created = models.DateTimeField(auto_now_add=True)
     
     def __unicode__(self):
         return "%s - %s" % (str(self.user.username), str(self.action.name))
