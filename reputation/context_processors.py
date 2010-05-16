@@ -1,6 +1,6 @@
-import django_reputation.config as config
+import reputation.config as config
 
-from django_reputation.models import Permission, Reputation
+from reputation.models import Permission, Reputation
 
 def reputation(request):
     """

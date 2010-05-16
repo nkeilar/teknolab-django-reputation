@@ -6,8 +6,8 @@ from django.utils.functional import wraps
 from django.utils.http import urlquote
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_reputation.exceptions import ReputationException
-from django_reputation.models import Permission, Reputation, ReputationAction
+from reputation.exceptions import ReputationException
+from reputation.models import Permission, Reputation, ReputationAction
 
 def ReputationRequired(view_func, permission_name):
     """

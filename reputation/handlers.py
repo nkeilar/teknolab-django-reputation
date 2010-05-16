@@ -1,4 +1,4 @@
-from django_reputation.models import ReputationAction, Reputation
+from reputation.models import ReputationAction, Reputation
 from django.db.models.signals import post_save, post_delete
 from django_qa.signals import answer_accepted
 

@@ -1,5 +1,5 @@
 from django.contrib import admin
-import django_reputation.models as models
+import reputation.models as models
 
 admin.site.register(models.Reputation)
 admin.site.register(models.ReputationAction)

@@ -7,7 +7,7 @@ from django_wizard.wizard import config_index as configs
 from django_wizard.wizard import fixtures_index as fixtures
 from django_wizard.models import ConfigOption, ConfigFixture
 
-_CURRENT_APP = 'django_reputation'
+_CURRENT_APP = 'reputation'
 
 REPUTATION_ENABLED = ConfigOption(app = _CURRENT_APP,
                                     name = 'REPUTATION_ENABLED',

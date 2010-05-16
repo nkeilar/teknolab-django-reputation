@@ -2,8 +2,8 @@ import django.shortcuts as shortcuts
 from django.template import RequestContext
 from django.core.exceptions import ObjectDoesNotExist
 
-from django_reputation.models import Permission
-from django_reputation.config import REPUTATION_REQUIRED_TEMPLATE
+from reputation.models import Permission
+from reputation.config import REPUTATION_REQUIRED_TEMPLATE
 
 def reputation_required(request,  permission_name):
     """

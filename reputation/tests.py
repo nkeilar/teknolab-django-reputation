@@ -1,10 +1,10 @@
 import unittest
 
 from django.contrib.auth.models import User
-from django_reputation.models import (Reputation, ReputationAction, UserReputationAction,
+from reputation.models import (Reputation, ReputationAction, UserReputationAction,
                                       Permission, ReputationContent)
-import django_reputation.config as config
-from django_reputation.decorators import ReputationRequired, reputation_required
+import reputation.config as config
+from reputation.decorators import ReputationRequired, reputation_required
 import django.http as http
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
@@ -147,8 +147,8 @@ class ReputationRegistrationTests(unittest.TestCase):
         """
         Tests registration of handlers for reputation post_save signals.
         """
-        import django_reputation.handlers as handlers
-        from django_reputation.reputation import reputation_registry, ReputationRegistry
+        import reputation.handlers as handlers
+        from reputation.reputation import reputation_registry, ReputationRegistry
         
         reputation_registry = ReputationRegistry()
         user_content_name = "%s_%s" % (self.user_reputation_content.content_type.app_label, 

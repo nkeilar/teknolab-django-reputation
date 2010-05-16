@@ -6,7 +6,7 @@ from django.contrib.contenttypes import generic
 from django.template.loader import render_to_string
 
 from django_utils.templatetag_helpers import resolve_variable, copy_context
-from django_reputation.models import Reputation
+from reputation.models import Reputation
 
 register = template.Library()
 

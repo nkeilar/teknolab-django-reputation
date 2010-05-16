@@ -17,7 +17,7 @@ else:
 setup(
     name = 'teknolab-django-reputation',
     version = version,
-    description = 'Generic reputation application for Django',
+    description = 'Generic user reputation application for Django',
     url = 'http://code.google.com/p/django-voting/',
     packages = ['reputation', 'reputation.templatetags'],
     classifiers = ['Development Status :: 4 - Beta',

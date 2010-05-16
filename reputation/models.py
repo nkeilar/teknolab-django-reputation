@@ -7,10 +7,10 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 
-from django_reputation.exceptions import ReputationException
-from django_reputation.config import (MAX_REPUTATION_GAIN_PER_DAY, 
-                                      MAX_REPUTATION_LOSS_PER_DAY, 
-                                      BASE_REPUTATION)
+from reputation.exceptions import ReputationException
+from reputation.config import (MAX_REPUTATION_GAIN_PER_DAY, 
+                               MAX_REPUTATION_LOSS_PER_DAY, 
+                               BASE_REPUTATION)
 
 class ReputationManager(models.Manager):
     """

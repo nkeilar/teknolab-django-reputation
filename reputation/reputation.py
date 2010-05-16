@@ -1,5 +1,5 @@
-from django_reputation.models import Reputation, ReputationContent
-import django_reputation.handlers as handlers
+from reputation.models import Reputation, ReputationContent
+import reputation.handlers as handlers
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
