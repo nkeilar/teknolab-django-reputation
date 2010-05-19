@@ -16,7 +16,7 @@ else:
 
 setup(
     name = 'teknolab-django-reputation',
-    version = version,
+    version = '0.1',
     description = 'Generic user reputation application for Django',
     url = 'http://github.com/teknolab/teknolab-django-reputation',
     packages = ['reputation', 'reputation.templatetags'],
