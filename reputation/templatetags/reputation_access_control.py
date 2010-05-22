@@ -5,7 +5,7 @@ from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.template.context import Context
 
-from django_utils.templatetag_helpers import resolve_variable, combine_variable_list
+from django_utils.templatetag_helpers import combine_variable_list
 from django_reputation.models import Permission, Reputation
 import django_reputation.config as config
 
@@ -59,11 +59,11 @@ class DenyMessage(template.Node):
     the site.
     """
     def __init__(self, unique_id,  overlay_id, permission_name):
-        self.unique_id = unique_id
+        self.unique_id = template.Variable(unique_id)
         self.overlay_id = overlay_id
         self.permission_name = permission_name
         
     def render(self,  context):
-        unique_id = resolve_variable(self.unique_id,  context, self.unique_id)
+        unique_id = self.unique_id.resolve(context)
         
         return ''

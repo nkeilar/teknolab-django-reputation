@@ -31,8 +31,8 @@ class ReputationRegistry(object):
     def get_handler(self, content_name):
         """
         Returns a handler class based on StudlyCaps notation of
-        content_type.app_label + content_type.model + HistoryHandler.
-        Defaults to BaseHistoryHandler.
+        content_type.app_label + content_type.model + ReputationHandler.
+        Defaults to BaseReputationHandler.
         """
         def to_studly(x):
             return "".join([token.capitalize() for token in x.split("_")])
@@ -53,4 +53,5 @@ class ReputationRegistry(object):
             handler = HandlerClass(content_type)
             self._handlers[content_name] = handler
             self._registry[content_name] = content_type
-            
+
+reputation_registry = ReputationRegistry()

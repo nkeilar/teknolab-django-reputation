@@ -1,10 +1,10 @@
 from reputation.models import ReputationAction, Reputation
 from django.db.models.signals import post_save, post_delete
-from django_qa.signals import answer_accepted
+
 
 class BaseReputationHandler(object):
     """
-    Default handler for creating ModelHistory objects.
+    Default handler for creating AppModelReputationHandler objects.
     """
     
     def __init__(self, content_type_object):
@@ -52,37 +52,4 @@ class BaseReputationHandler(object):
                                                                                 target_object = target_object,
                                                                                 action_value = value)
         
-class DjangoMultivotingVoteReputationHandler(BaseReputationHandler):
-    """
-    Handler for django_multivoting Vote
-    """
-    UP_VALUE = 15
-    DOWN_VALUE = -5
-    
-    def check_conditions(self, instance):
-        return True
-    
-    def get_target_object(self, instance):
-        return instance.content_object
-    
-    def get_target_user(self, instance):
-        return getattr(instance.content_object, 'user', None)
-    
-    def get_originating_user(self, instance):
-        return getattr(instance, 'user', None)
-    
-    def get_reputation_action(self, instance):
-        if instance.mode == 'up':
-            action_object = ReputationAction.objects.get(name = 'voted_up')
-        elif instance.mode == 'down':
-            action_object = ReputationAction.objects.get(name = 'voted_down')
-        return action_object
-    
-    def get_value(self, instance):
-        value = 0
-        if instance.mode == 'up':
-            value = self.UP_VALUE
-        elif instance.mode == 'down':
-            value = self.DOWN_VALUE
-        return value
     

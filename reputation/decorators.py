@@ -48,7 +48,7 @@ def reputation_required(permission_name):
 class _ReputationRequired(object):
     """
     Checks to determine if the current logged in user has permissions to use
-    a part of a the site based on permission_name and redirects
+    a part of the site based on permission_name and redirects
     to the reputation-required view if the reputation check fails.
     """
     def __init__(self, permission_name, view_func):

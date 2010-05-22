@@ -148,7 +148,7 @@ class ReputationRegistrationTests(unittest.TestCase):
         Tests registration of handlers for reputation post_save signals.
         """
         import reputation.handlers as handlers
-        from reputation.reputation import reputation_registry, ReputationRegistry
+        from reputation import reputation_registry, ReputationRegistry
         
         reputation_registry = ReputationRegistry()
         user_content_name = "%s_%s" % (self.user_reputation_content.content_type.app_label, 
