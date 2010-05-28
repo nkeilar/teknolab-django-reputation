@@ -2,7 +2,7 @@ import unittest
 
 from django.contrib.auth.models import User
 from reputation.models import (Reputation, ReputationAction, UserReputationAction,
-                                      Permission, ReputationContent)
+                               ReputationContent)
 import reputation.config as config
 from reputation.decorators import ReputationRequired, reputation_required
 import django.http as http
@@ -73,56 +73,6 @@ class DummyRequest(object):
         self.user.save()
         Reputation.objects.reputation_for_user(self.user)
         
-class DummyDecClass(object):
-    def __init__(self):
-        pass
-    
-    def call(self, request):
-        return 'YO'
-    __call__ = ReputationRequired(call, 'test permission')
-    
-class ReputationDecoratorTests(unittest.TestCase):
-    def setUp(self):
-        user_1 = User.objects.create_user(username = 'Test User',
-                                          email = 'test_user@gmail.com')
-        self.user_1 = user_1
-        
-        user_2 = User.objects.create_user(username = 'Test User 2',
-                                          email = 'test_user2@gmail.com')
-        self.user_2 = user_2
-        Reputation.objects.reputation_for_user(self.user_1)
-        Reputation.objects.reputation_for_user(self.user_2)
-
-        Reputation.objects.update_user_reputation(self.user_1, 5000)
-        
-        test_permission, created = Permission.objects.get_or_create(name = 'test permission',
-                                                           description = '',
-                                                           required_reputation = 4500)
-        self.test_permission = test_permission
-        
-        request = DummyRequest()
-        self.request = request
-        
-    def tearDown(self):
-        self.user_1.delete()
-        self.user_2.delete()
-        self.test_permission.delete()
-        
-    def test_reputation_required(self):
-        """
-        Tests ReputationRequired decorator.
-        """
-        Reputation.objects.update_user_reputation(self.user_1, 5000)
-        dummy_class = DummyDecClass()
-        status = dummy_class(self.request)
-        self.assertEqual(status, 'YO')
-        
-        Reputation.objects.update_user_reputation(self.user_1, 2000)
-        self.request.user = self.user_1
-        dummy_class = DummyDecClass()
-        status = dummy_class(self.request)
-        self.assertEqual(status.__class__, http.HttpResponseRedirect)
-    
 class ReputationRegistrationTests(unittest.TestCase):
     def setUp(self):
         user_1 = User.objects.create_user(username = 'Test User',

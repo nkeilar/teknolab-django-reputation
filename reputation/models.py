@@ -1,16 +1,10 @@
 import datetime
-
 from django.db import models
 from django.core.exceptions import ObjectDoesNotExist
-
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
 
-from reputation.exceptions import ReputationException
-from reputation.config import (MAX_REPUTATION_GAIN_PER_DAY, 
-                               MAX_REPUTATION_LOSS_PER_DAY, 
-                               BASE_REPUTATION)
 
 class ReputationManager(models.Manager):
     """
@@ -165,13 +159,3 @@ class UserReputationAction(models.Model):
     def __unicode__(self):
         return "%s - %s" % (str(self.user.username), str(self.action.name))
     
-class Permission(models.Model):
-    """
-    Model representing the required reputation needed to perform an action on the site.
-    """
-    name = models.CharField(max_length = 75, unique = True)
-    description = models.TextField(default = '')
-    required_reputation = models.IntegerField(default = 0)
-    
-    def __unicode__(self):
-        return "%s - %s" % (str(self.name), str(self.required_reputation))

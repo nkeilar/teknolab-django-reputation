@@ -1,8 +1,7 @@
 from django.contrib import admin
-import reputation.models as models
+from reputation.models import Reputation, ReputationAction, UserReputationAction, ReputationContent
 
-admin.site.register(models.Reputation)
-admin.site.register(models.ReputationAction)
-admin.site.register(models.UserReputationAction)
-admin.site.register(models.Permission)
-admin.site.register(models.ReputationContent)
+admin.site.register(Reputation)
+admin.site.register(ReputationAction)
+admin.site.register(UserReputationAction)
+admin.site.register(ReputationContent)

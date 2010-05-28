@@ -1,2 +1,0 @@
-class ReputationException(Exception):
-    pass

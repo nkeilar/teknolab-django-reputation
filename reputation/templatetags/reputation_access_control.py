@@ -6,7 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.template.context import Context
 
 from django_utils.templatetag_helpers import combine_variable_list
-from django_reputation.models import Permission, Reputation
+from django_reputation.models import Reputation
 import django_reputation.config as config
 
 register = template.Library()
@@ -54,7 +54,7 @@ def do_update_deny_message(parser,  token):
 class DenyMessage(template.Node):
     """
     convenience tag for generating JavaScript that changes the html of an html element with
-    id = unique_id to the description of the specified Permission object.  Useful for
+    id = unique_id to the description of the specified permission. Useful for
     displaying messages to users when they do not have enough reputation to access a section of 
     the site.
     """

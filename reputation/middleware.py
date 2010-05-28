@@ -1,6 +1,6 @@
 import reputation.config as config
+from reputation.models import Reputation
 
-from reputation.models import Permission, Reputation
 
 class ReputationMiddleware(object):
     """
