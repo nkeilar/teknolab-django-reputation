@@ -1,11 +1,12 @@
-======================
-Django user reputation
-======================
+==========================
+TeknoLab Django Reputation
+==========================
 
-This is a simple user-reputation and reputation access control application
-for Django.  It requires Django 1.0 or newer, and has no other required 
-dependencies.
+This is the simplified and cleaned-up version of the django-reputation application that lives here:
+http://code.google.com/p/django-reputation/
 
-For installation instructions, see the file "INSTALL" in this directory.
-For instructions on how to use this application, check out the docs/
-directory.
+Compared to the original one most fundamental changes are:
+- external dependencies such as django_utils are removed
+- reputation permissions are integrated with django's built-in permissions
+
+For a usage example, see the test_project django project.
