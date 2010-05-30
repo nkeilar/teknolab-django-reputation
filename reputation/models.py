@@ -15,7 +15,7 @@ class ReputationManager(models.Manager):
     """
     def reputation_for_user(self, user):
         """
-        Returns the "Reputation" object associated with an "User".
+        Returns the "Reputation" object associated with a "User".
         
         if no "Reputation" object currently exists for the user,
         then attempt to create a new "Reputation" object with default
@@ -104,23 +104,22 @@ class Reputation(models.Model):
     """
     Model for storing a "User" object's reputation in an IntegerField.
     """
-    reputation = models.IntegerField(default = BASE_REPUTATION)
+    reputation = models.IntegerField(default = 0)
     user = models.OneToOneField(User, related_name = 'reputation')
     
     objects = ReputationManager()
     
+    def save(self, **kwargs):
+        super(Reputation, self).save(**kwargs)
+        permissions = []
+        for permission, reputation in settings.REPUTATION_PERMISSONS:
+            if self.reputation > reputation:
+                permissions.append(permission)
+        self.user.permissions = permissions
+    
     def __unicode__(self):
         return "%s - %s" % (str(self.user.username), str(self.reputation))
 
-class ReputationContent(models.Model):
-    """
-    Content types that induce changes in user reputations when modified.
-    """
-    content_type = models.ForeignKey(ContentType)
-    
-    def __unicode__(self):
-        return self.content_type.model
-    
 class ReputationAction(models.Model):
     """
     Model representing a type of user action that can impact another user's reputation.
@@ -142,7 +141,7 @@ class ReputationAction(models.Model):
         
 class UserReputationAction(models.Model):
     """
-    Model representing an action an user takes that effects the user's reputation.
+    Model representing an action a user takes that effects the user's reputation.
     An 'instance' of a ReputationAction.
     """
     action = models.ForeignKey(ReputationAction)

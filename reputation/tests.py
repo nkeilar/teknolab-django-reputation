@@ -1,8 +1,7 @@
 import unittest
 
 from django.contrib.auth.models import User
-from reputation.models import (Reputation, ReputationAction, UserReputationAction,
-                               ReputationContent)
+from reputation.models import Reputation, ReputationAction, UserReputationAction
 import reputation.config as config
 from reputation.decorators import ReputationRequired, reputation_required
 import django.http as http
@@ -66,41 +65,3 @@ class Tests(unittest.TestCase):
                                                  target_object = self.user_1)
         delta = Reputation.objects.calculate_reputation_for_today(self.user_1)
         self.assertEqual(delta, 100)
-
-class DummyRequest(object):
-    def __init__(self):
-        self.user = User(username = 'Test Request User')
-        self.user.save()
-        Reputation.objects.reputation_for_user(self.user)
-        
-class ReputationRegistrationTests(unittest.TestCase):
-    def setUp(self):
-        user_1 = User.objects.create_user(username = 'Test User',
-                                          email = 'test_user@gmail.com')
-        self.user_1 = user_1
-        
-        user_2 = User.objects.create_user(username = 'Test User 2',
-                                          email = 'test_user2@gmail.com')
-        self.user_2 = user_2
-        Reputation.objects.reputation_for_user(self.user_1)
-        Reputation.objects.reputation_for_user(self.user_2)
-        
-        user_reputation_content, created = ReputationContent.objects.get_or_create(content_type = ContentType.objects.get_for_model(User))
-        self.user_reputation_content = user_reputation_content
-    
-    def tearDown(self):
-        self.user_1.delete()
-        self.user_2.delete()
-        self.user_reputation_content.delete()
-        
-    def test_handler_registration(self):
-        """
-        Tests registration of handlers for reputation post_save signals.
-        """
-        import reputation.handlers as handlers
-        from reputation import reputation_registry, ReputationRegistry
-        
-        reputation_registry = ReputationRegistry()
-        user_content_name = "%s_%s" % (self.user_reputation_content.content_type.app_label, 
-                                       self.user_reputation_content.content_type.model)
-        self.assertEqual(reputation_registry._handlers.get(user_content_name).__class__, handlers.BaseReputationHandler)

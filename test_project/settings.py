@@ -17,19 +17,12 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'reputation',
+    'test_app',
 )
 
 ROOT_URLCONF = 'urls'
 
 MAX_REPUTATION_LOSS_PER_DAY = 200
 MAX_REPUTATION_GAIN_PER_DAY = 200
-
-REPUTATION_PERMISSONS = {'can_vote_up': 50,
-                         'can_vote_down': 150,
-                         'can_add_tag': 250}
-
-'''
-REPUTATION_ENABLED = True
-BASE_REPUTATION = 5000
-REPUTATION_REQUIRED_TEMPLATE = 'reputation/reputation_required.html'
-'''
+REPUTATION_PERMISSONS = {'voting.can_vote_up': 50,
+                         'voting.can_vote_down': 150}

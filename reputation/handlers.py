@@ -1,20 +1,15 @@
-from reputation.models import ReputationAction, Reputation
 from django.db.models.signals import post_save, post_delete
+from reputation.models import Reputation
 
 
 class BaseReputationHandler(object):
     """
-    Default handler for creating AppModelReputationHandler objects.
+    Default handler for creating ReputationHandler objects.
     """
     
-    def __init__(self, content_type_object):
-        self.content_type_object = content_type_object
-        self.model = content_type_object.model_class()
-        self._connect_signals()
-        
-    def _connect_signals(self):
-        post_save.connect(self._post_save_signal_callback, sender=self.model, weak = False)
-            
+    def __init__(self):
+        post_save.connect(self._post_save_signal_callback, sender=self.model, weak=False)
+
     def _post_save_signal_callback(self, **kwargs):
         instance = kwargs['instance']
         created = kwargs['created']
@@ -51,5 +46,3 @@ class BaseReputationHandler(object):
                                                                                 action_name = action.name,
                                                                                 target_object = target_object,
                                                                                 action_value = value)
-        
-    
