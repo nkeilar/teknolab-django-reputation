@@ -28,21 +28,12 @@ class BaseReputationHandler(object):
     def get_originating_user(self, instance):
         pass
     
-    def get_reputation_action(self, instance):
-        pass
-    
     def get_value(self, instance):
         return 0
     
     def modify_reputation(self, instance):
         if self.check_conditions(instance):
-            target_user = self.get_target_user(instance)
-            originating_user = self.get_originating_user(instance)
-            action = self.get_reputation_action(instance)
-            target_object = self.get_target_object(instance)
-            value = self.get_value(instance)
-            reputation_action_object = Reputation.objects.log_reputation_action(user = target_user, 
-                                                                                originating_user = originating_user,
-                                                                                action_name = action.name,
-                                                                                target_object = target_object,
-                                                                                action_value = value)
+            Reputation.objects.log_reputation_action(user = self.get_target_user(instance), 
+                                                     originating_user = self.get_originating_user(instance),
+                                                     target_object = self.get_target_object(instance),
+                                                     action_value = self.get_value(instance))

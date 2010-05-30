@@ -15,7 +15,7 @@ class Vote(models.Model):
     content_type = models.ForeignKey(ContentType)
     object_id = models.PositiveIntegerField()
     object = generic.GenericForeignKey('content_type', 'object_id')
-    vote = models.SmallIntegerField(choices=((u'+1', +1), (u'-1', -1)))
+    vote = models.SmallIntegerField(choices=((1, 1), (-1, -1)))
     
     class Meta:
         permissions = (('can_vote_up', 'Can vote up'),
@@ -38,14 +38,7 @@ class VotingReputationHandler(BaseReputationHandler):
     
     def get_originating_user(self, instance):
         return getattr(instance, 'user', None)
-    
-    def get_reputation_action(self, instance):
-        if instance.vote == 1:
-            action_object = ReputationAction.objects.get(name = 'voted_up')
-        elif instance.vote == -1:
-            action_object = ReputationAction.objects.get(name = 'voted_down')
-        return action_object
-        
+            
     def get_value(self, instance):
         value = 0
         if instance.vote == 1:

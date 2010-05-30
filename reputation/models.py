@@ -4,7 +4,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 from django.contrib.auth.models import User
+from django.conf import settings
 
+REPUTATION_MAX_GAIN_PER_DAY = settings.REPUTATION_MAX_GAIN_PER_DAY
+REPUTATION_MAX_LOSS_PER_DAY = settings.REPUTATION_MAX_LOSS_PER_DAY
 
 class ReputationManager(models.Manager):
     """
@@ -30,13 +33,15 @@ class ReputationManager(models.Manager):
     
     def calculate_reputation_for_today(self, user):
         """
-        Calculates and returns the total amount of reputation an "User" 
+        Calculates and returns the total amount of reputation a User 
         has gained today.
         """
         start_time = datetime.datetime.today().replace(hour = 0, minute = 0, second = 0)
         end_time = datetime.datetime.today().replace(hour = 23, minute = 59, second = 59)
         
-        relevant_reputation_actions = UserReputationAction.objects.filter(date_created__range = (start_time, end_time))
+        relevant_reputation_actions = ReputationAction.objects.filter(user=user,
+                                                                      date_created__range = (start_time, end_time))
+        # TODO: use Sum() aggregate
         delta = sum([action.value for action in relevant_reputation_actions])
         return delta
     
@@ -52,44 +57,34 @@ class ReputationManager(models.Manager):
             reputation.reputation = reputation.reputation + value
             reputation.save()
         
-    def log_reputation_action(self, user, originating_user, action_name, action_value, target_object):
+    def log_reputation_action(self, user, originating_user, action_value, target_object):
         """
-        Attempt to create an "UserReputationAction" object associated with @user,
-        @object and a "ReputationAction" object with name @action_name.
+        Attempt to create a ReputationAction object associated with @user
         
-        checks uniqueness constraints on the "ReputationAction" object if found.
-        
-        if an "ReputationAction" is found and uniqueness constraints checking passes,
+        if a ReputationAction is found and uniqueness constraints checking passes,
         then attempt to update @user's reputation.  Checks the current reputation 
         gained today and limits the change in reputation if the user has outbounded
-        either MAX_REPUTATION_GAIN_PER_DAY or MAX_REPUTATION_LOSS_PER_DAY.
+        either REPUTATION_MAX_GAIN_PER_DAY or REPUTATION_MAX_LOSS_PER_DAY.
         """
         content_type_object = ContentType.objects.get_for_model(target_object.__class__)
         object_id = target_object.id
         
-        try:
-            action = ReputationAction.objects.get(name = action_name)
-        except ObjectDoesNotExist:
-            raise ReputationException('No reputation action named %s available for %s'
-                                          % (action_name, content_type.model))
-                             
-        user_reputation_action = UserReputationAction(user = user, 
-                                                      originating_user = originating_user, 
-                                                      action = action, 
-                                                      content_type = content_type_object, 
-                                                      object_id = object_id,
-                                                      value = action_value)
-        user_reputation_action.save()
+        reputation_action = ReputationAction(user = user, 
+                                             originating_user = originating_user, 
+                                             content_type = content_type_object, 
+                                             object_id = object_id,
+                                             value = action_value)
+        reputation_action.save()
         
         current_delta = Reputation.objects.calculate_reputation_for_today(user)
         expected_delta = action_value + current_delta
         
-        if expected_delta <= MAX_REPUTATION_GAIN_PER_DAY and expected_delta >= -1 * MAX_REPUTATION_LOSS_PER_DAY:
+        if expected_delta <= REPUTATION_MAX_GAIN_PER_DAY and expected_delta >= -1 * REPUTATION_MAX_LOSS_PER_DAY:
             delta = action_value
-        elif expected_delta > MAX_REPUTATION_GAIN_PER_DAY:
-            delta = MAX_REPUTATION_GAIN_PER_DAY - current_delta
-        elif expected_delta < MAX_REPUTATION_LOSS_PER_DAY:
-            delta = MAX_REPUTATION_LOSS_PER_DAY - current_delta
+        elif expected_delta > REPUTATION_MAX_GAIN_PER_DAY:
+            delta = REPUTATION_MAX_GAIN_PER_DAY - current_delta
+        elif expected_delta < REPUTATION_MAX_LOSS_PER_DAY:
+            delta = REPUTATION_MAX_LOSS_PER_DAY - current_delta
         Reputation.objects.update_reputation(user, delta)
     
     def update_user_reputation(self, user, final_value):
@@ -112,7 +107,7 @@ class Reputation(models.Model):
     def save(self, **kwargs):
         super(Reputation, self).save(**kwargs)
         permissions = []
-        for permission, reputation in settings.REPUTATION_PERMISSONS:
+        for permission, reputation in settings.REPUTATION_PERMISSONS.items():
             if self.reputation > reputation:
                 permissions.append(permission)
         self.user.permissions = permissions
@@ -122,29 +117,8 @@ class Reputation(models.Model):
 
 class ReputationAction(models.Model):
     """
-    Model representing a type of user action that can impact another user's reputation.
-    
-    all ReputationActions instances are associated with a ContentType, so 
-    ReputationActions of the same name can be specified for differing ContenTypes.
-    
-    The field unique_for_content if true only allows one "UserReputationAction" object
-    to be created per user for each ContentType.
-    
-    The field unique_for_object if true only allows one "UserReputationAction" object
-    to be created per user for each object. 
-    """
-    name = models.CharField(max_length = 75)
-    description = models.TextField(default = '')
-        
-    def __unicode__(self):
-        return self.name
-        
-class UserReputationAction(models.Model):
-    """
     Model representing an action a user takes that effects the user's reputation.
-    An 'instance' of a ReputationAction.
     """
-    action = models.ForeignKey(ReputationAction)
     user = models.ForeignKey(User, related_name = 'target_user')
     originating_user = models.ForeignKey(User, related_name = 'originating_user')
     
