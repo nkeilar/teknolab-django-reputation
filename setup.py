@@ -19,7 +19,7 @@ setup(
     version = version,
     description = 'Generic user reputation application for Django',
     url = 'http://github.com/teknolab/teknolab-django-reputation',
-    packages = ['reputation', 'reputation.templatetags'],
+    packages = ['reputation'],
     classifiers = ['Development Status :: 4 - Beta',
                    'Environment :: Web Environment',
                    'Framework :: Django',
